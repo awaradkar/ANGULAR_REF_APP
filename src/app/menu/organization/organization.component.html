@@ -1,0 +1,201 @@
+<div class="jumbotron">
+  <div class="container">
+    <div class="col-md-12 mx-auto">
+      <h2>Organization</h2>
+
+      <div name="formDiv" *ngIf="!searchOpen">
+        <form name="form" (ngSubmit)="f.form.valid && save(f)" #f="ngForm" novalidate>
+          <input type="hidden" class="form-control" name="_id" [(ngModel)]="model._id">
+          <div class="form-group row">
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !_orgId.valid }">
+              <label for="_orgId">Organization Id</label>
+              <input type="text" class="form-control" name="_orgId" placeholder="Organization Id"
+                [(ngModel)]="model._orgId" #_orgId="ngModel" required [disabled]="true" />
+            </div>
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !_orgName.valid }">
+              <label for="_orgName">Organization Name</label>
+              <input type="text" class="form-control" name="_orgName" placeholder="Organization Name"
+                [(ngModel)]="model._orgName" #_orgName="ngModel" required [disabled]="disableFields" />
+              <div *ngIf="f.submitted && !_orgName.valid && !disableFields" class="help-block">Organization Name is
+                required
+              </div>
+            </div>
+
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !_orgType.valid }">
+              <label for="_orgType">Organization Type</label>
+              <select class="form-control" name="_orgType"
+                [(ngModel)]="model._orgType" #_orgType="ngModel" required [disabled]="disableFields||editDisabled" >
+              <option>WAREHOUSE</option>
+              <option>CLIENT</option>
+              </select>
+              <div *ngIf="f.submitted && !_orgType.valid && !disableFields" class="help-block">Organization Type is
+                required</div>
+            </div>
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !_orgDate.valid }">
+              <label for="_orgDate">Organization Date</label>
+              <input type="text" class="form-control" name="_orgDate" placeholder="MM/dd/yyyy"
+                [(ngModel)]="model._orgDate" #_orgDate="ngModel" required [disabled]="disableFields" />
+              <div *ngIf="f.submitted && !_orgDate.valid && !disableFields" class="help-block">Organization Date is
+                required</div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !_orgState.valid }">
+              <label for="_orgState">Organization Province</label>
+              <select class="form-control" name="_orgState"
+                [(ngModel)]="model._orgState" #_orgState="ngModel" required [disabled]="disableFields" >
+                 <option>Connacht</option>
+                 <option>Leinster</option>
+                 <option>Munster</option>
+                 <option>Ulster</option>
+              </select>
+              <div *ngIf="f.submitted && !_orgState.valid && !disableFields" class="help-block">Organization State is
+                required</div>
+            </div>
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !_orgLocation.valid }">
+              <label for="_orgCity">Organization Location</label>
+              <input type="text" class="form-control" name="_orgLocation" placeholder="Organization Location"
+                [(ngModel)]="model._orgLocation" #_orgLocation="ngModel" required [disabled]="disableFields" />
+              <div *ngIf="f.submitted && !_orgLocation.valid && !disableFields" class="help-block">Organization Location
+                is
+                required</div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !_orgAddress.valid }">
+              <label for="_orgAddress">Organization Address</label>
+              <input type="text" class="form-control" name="_orgAddress" placeholder="Organization Address"
+                [(ngModel)]="model._orgAddress" #_orgAddress="ngModel" required [disabled]="disableFields" />
+              <div *ngIf="f.submitted && !_orgAddress.valid && !disableFields" class="help-block">Organization Address
+                is
+                required</div>
+            </div>
+            <div class="col-sm-3" [ngClass]="{ 'has-error': f.submitted && !_orgCity.valid }">
+              <label for="_orgCity">Organization City</label>
+              <input type="text" class="form-control" name="_orgCity" placeholder="Organization City"
+                [(ngModel)]="model._orgCity" #_orgCity="ngModel" required [disabled]="disableFields" />
+              <div *ngIf="f.submitted && !_orgCity.valid && !disableFields" class="help-block">Organization City is
+                required</div>
+            </div>
+            <div class="col-sm-3" [ngClass]="{ 'has-error': f.submitted && !_orgZipCode.valid }">
+              <label for="_orgZipCode">Organization ZipCode</label>
+              <input type="text" class="form-control" name="_orgZipCode" placeholder="Organization ZipCode"
+                [(ngModel)]="model._orgZipCode" #_orgZipCode="ngModel" required [disabled]="disableFields" />
+              <div *ngIf="f.submitted && !_orgZipCode.valid && !disableFields" class="help-block">Organization ZipCode
+                is
+                required</div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-10"></div>
+            <div class="col-sm-1">
+              <button [disabled]="loading" class="btn btn-primary px-4 float-right"
+                *ngIf="!disableFields && !editDisabled">Save</button>
+              <button [disabled]="loading" class="btn btn-primary px-4 float-right"
+                *ngIf="!disableFields && editDisabled" (click)="edit(f)">Edit</button>
+              <button class="btn btn-primary px-4 float-right" *ngIf="disableFields" (click)="enableCreate(f)">Add
+                New</button></div>
+            <div class="col-sm-1">
+              <button class="btn btn-primary px-4 float-right" (click)="viewOrganizations(f)">View</button>
+            </div>
+            <img *ngIf="loading"
+              src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+
+          </div>
+        </form>
+      </div>
+      <!--search div starts here-->
+      <div name="searchDiv" *ngIf="searchOpen">
+        <form name="searchForm" (ngSubmit)="getRecordsOnInit(searhModel)" #f="ngForm">
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="_orgId">Organization Id</label>
+              <input type="text" class="form-control" id="_orgId" name="_orgId" placeholder="Organization Id"
+                [(ngModel)]="searhModel._orgId" #_orgId="ngModel"/>
+
+             <!-- <p-autoComplete name="_orgId" ngDefaultControl [(ngModel)]="searhModel._orgId"
+                [suggestions]="orgAutoList" (completeMethod)="getOrgId($event)" [minLength]="1" [immutable]="false">
+              </p-autoComplete>-->
+
+
+            </div>
+            <div class="col-sm-6">
+              <label for="_orgName">Organization Name</label>
+              <input type="text" class="form-control" id="_orgName" name="_commName" placeholder="Organization Name"
+                [(ngModel)]="searhModel._orgName" #_orgName="ngModel" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+              <div class="col-sm-6">
+                <label for="_orgType">Organization Type</label>
+                <input type="text" class="form-control" id="_orgType" name="_orgType" placeholder="Organization Type"
+                  [(ngModel)]="searhModel._orgType" #_orgType="ngModel"/>
+              </div>
+              <div class="col-sm-6">
+                <label for="_orgCity">Organization City</label>
+                <input type="text" class="form-control" id="_orgCity" name="_orgCity" placeholder="Organization City"
+                  [(ngModel)]="searhModel._orgCity" #_orgCity="ngModel" />
+              </div>
+            </div>
+          <!--
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="startDate">From Date</label>
+              <mat-form-field>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" name="startDate"
+                  [(ngModel)]="searhModel.startDate" #startDate="ngModel" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+              <label for="endDate">End Date</label>
+              <mat-form-field>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" name="endDate"
+                  [(ngModel)]="searhModel.endDate" #endDate="ngModel" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>-->
+          <div class="form-group row">
+            <div class="col-sm-10"></div>
+            <div class="col-sm-1">
+              <button class="btn btn-primary px-4 float-right">Search</button></div>
+            <div class="col-sm-1">
+              <button class="btn btn-primary px-4 float-right" (click)="createNewForm(f)">Add</button>
+            </div>
+          </div>
+          <div style="box-align:center">
+            <label style="text-align: center">Organization View</label>
+            <div>
+              <input type="text" (input)="onQuickFilterChanged()" id="quickFilter" placeholder="quick filter..." />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              Please select a record to edit or delete
+            </div>
+            <div style="height: 300px"> 
+            <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
+              [paginationAutoPageSize]="true" [pagination]="true" [rowData]="rowData" [columnDefs]="columnDefs"
+              [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="rowSelection"
+              (gridReady)="onGridReady($event)">
+            </ag-grid-angular>
+          </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-10"></div>
+            <div class="col-sm-2">
+              <button class="btn btn-primary px-4 float-right" (click)="editRecord()">Edit Record</button></div>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

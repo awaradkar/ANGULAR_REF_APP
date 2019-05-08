@@ -1,0 +1,179 @@
+<div class="jumbotron">
+  <div class="container">
+    <div class="col-md-12 mx-auto">
+      <h2>Users</h2>
+
+      <div name="formDiv" *ngIf="!searchOpen">
+        <form name="form" (ngSubmit)="f.form.valid && save(f)" #f="ngForm" novalidate>
+          <input type="hidden" class="form-control" name="_id" [(ngModel)]="model._id">
+          <input type="hidden" class="form-control" name="_userRole" [(ngModel)]="model._userRole">
+          <div class="form-group row">
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !_userId.valid }">
+              <label for="_userId">User Id</label>
+              <input type="text" class="form-control" name="_userId" placeholder="User Id"
+                [(ngModel)]="model._userId" #_userId="ngModel" required [disabled]="true" />
+            </div>
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !_userName.valid }">
+              <label for="_userName">User Name</label>
+              <input type="text" class="form-control" name="_userName" placeholder="User Name"
+                [(ngModel)]="model._userName" #_userName="ngModel" required [disabled]="disableFields" />
+              <div *ngIf="f.submitted && !_userName.valid && !disableFields" class="help-block">User Name is
+                required
+              </div>
+            </div>
+
+          </div>
+
+          
+          <div class="form-group row">
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !_userPassword.valid }">
+              <label for="_userPassword">User Password</label>
+              <input type="password" class="form-control" name="_userPassword" placeholder="User Password"
+                [(ngModel)]="model._userPassword" #_userPassword="ngModel" required [disabled]="disableFields||editDisabled" />
+              <div *ngIf="f.submitted && !_userName.valid && !disableFields" class="help-block">User Password is
+                required
+              </div>
+            </div>
+            <div class="col-sm-5" [ngClass]="{ 'has-error': f.submitted && !_userOrg.valid }">
+              <label for="_userOrg">User Organization</label>
+              <input type="text" class="form-control" name="_userOrg" placeholder="User Organization"
+                [(ngModel)]="model._userOrg" #_userOrg="ngModel" required [disabled]="true" />
+              <div *ngIf="f.submitted && !_userOrg.valid && !disableFields" class="help-block">User Organization
+                is
+                required</div>
+            </div>
+            <div class="col-sm-1">
+              <p><a (click)="openOrgGrid()">Select</a></p>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-10"></div>
+            <div class="col-sm-1">
+              <button [disabled]="loading" class="btn btn-primary px-4 float-right"
+                *ngIf="!disableFields && !editDisabled">Save</button>
+              <button [disabled]="loading" class="btn btn-primary px-4 float-right"
+                *ngIf="!disableFields && editDisabled" (click)="edit(f)">Edit</button>
+              <button class="btn btn-primary px-4 float-right" *ngIf="disableFields" (click)="enableCreate(f)">Add
+                New</button></div>
+            <div class="col-sm-1">
+              <button class="btn btn-primary px-4 float-right" (click)="viewUsers(f)">View</button>
+            </div>
+            <img *ngIf="loading"
+              src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+
+          </div>
+          <div style="box-align:center" *ngIf = "orgViewOpen">
+            <label style="text-align: center">User View</label>
+            <div>
+              <input type="text" (input)="onOrgQuickFilterChanged()" id="orgQuickFilter" placeholder="quick filter..." />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              Please select a record to edit or delete
+            </div>
+            <div style="height:300px">
+            <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
+              [paginationAutoPageSize]="true" [pagination]="true" [rowData]="orgRowData" [columnDefs]="orgColumnDefs"
+              [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="rowSelection"
+              (gridReady)="onOrgGridReady($event)">
+            </ag-grid-angular>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-6"></div>
+            <div class="col-sm-2">
+              <button class="btn btn-primary px-4 float-right" (click)="selectRecord()">Select Record</button></div>
+            <div class="col-sm-4">
+            </div>
+          </div>
+          </div>
+        </form>
+      </div>
+      <!--search div starts here-->
+      <div name="searchDiv" *ngIf="searchOpen">
+        <form name="searchForm" (ngSubmit)="getRecordsOnInit(searhModel)" #f="ngForm">
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="_userId">User Id</label>
+              <input type="text" class="form-control" id="_userId" name="_userId" placeholder="User Id"
+                [(ngModel)]="searhModel._userId" #_userId="ngModel"/>
+
+             <!-- <p-autoComplete name="_orgId" ngDefaultControl [(ngModel)]="searhModel._orgId"
+                [suggestions]="orgAutoList" (completeMethod)="getOrgId($event)" [minLength]="1" [immutable]="false">
+              </p-autoComplete>-->
+
+
+            </div>
+            <div class="col-sm-6">
+              <label for="_userName">User Name</label>
+              <input type="text" class="form-control" id="_userName" name="_userName" placeholder="User Name"
+                [(ngModel)]="searhModel._userName" #_userName="ngModel" />
+            </div>
+          </div>
+
+          <div class="form-group row">
+              <div class="col-sm-6">
+                <label for="_userOrg">User Organization</label>
+                <input type="text" class="form-control" id="_userOrg" name="_userOrg" placeholder="User Organization"
+                  [(ngModel)]="searhModel._orgType" #_orgType="ngModel"/>
+              </div>
+            </div>
+          <!--
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="startDate">From Date</label>
+              <mat-form-field>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" name="startDate"
+                  [(ngModel)]="searhModel.startDate" #startDate="ngModel" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+              <label for="endDate">End Date</label>
+              <mat-form-field>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" name="endDate"
+                  [(ngModel)]="searhModel.endDate" #endDate="ngModel" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>-->
+          <div class="form-group row">
+            <div class="col-sm-10"></div>
+            <div class="col-sm-1">
+              <button class="btn btn-primary px-4 float-right">Search</button></div>
+            <div class="col-sm-1">
+              <button class="btn btn-primary px-4 float-right" (click)="createNewForm(f)">Add</button>
+            </div>
+          </div>
+          <div style="box-align:center">
+            <label style="text-align: center">User View</label>
+            <div>
+              <input type="text" (input)="onQuickFilterChanged()" id="quickFilter" placeholder="quick filter..." />
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              Please select a record to edit or delete
+            </div>
+            <div style="height: 300px">
+            <ag-grid-angular style="width: 100%; height: 100%;" class="ag-theme-balham"
+              [paginationAutoPageSize]="true" [pagination]="true" [rowData]="rowData" [columnDefs]="columnDefs"
+              [defaultColDef]="defaultColDef" [suppressRowClickSelection]="true" [rowSelection]="rowSelection"
+              (gridReady)="onGridReady($event)">
+            </ag-grid-angular>
+          </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-8"></div>
+            <div class="col-sm-2">
+              <button class="btn btn-primary px-4 float-right" (click)="editRecord()">Edit Record</button></div>
+            <div class="col-sm-2">
+              <button class="btn btn-primary px-4 float-right" (click)="deleteRecord()">Delete Record</button>
+            </div>
+          </div>
+
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>

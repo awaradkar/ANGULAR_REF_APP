@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <title>Masters Application</title>
+
+
+
+</head>
+
+<body>
+
+  <div class="d-flex" id="wrapper">
+
+    <!-- Sidebar -->
+    <div class="bg-light border-right" id="sidebar-wrapper">
+      <div class="sidebar-heading">MASTERS</div>
+      <div class="list-group list-group-flush">
+        <div *ngIf="!nlyChngPasswdDisplay">
+          <a class="list-group-item list-group-item-action bg-light" (click)="onselect('comm')">Commodity Master</a>
+          <a class="list-group-item list-group-item-action bg-light" (click)="onselect('org')">Organization Master</a>
+          <a class="list-group-item list-group-item-action bg-light" (click)="onselect('pack')">Pack Master</a>
+          <a class="list-group-item list-group-item-action bg-light" (click)="onselect('whComm')">Warehouse Commodity
+            Map</a>
+          <!-- <a class="list-group-item list-group-item-action bg-light" (click)="onselect('commPack')">Commodity Pack
+          Master</a>-->
+          <a class="list-group-item list-group-item-action bg-light" (click)="onselect('user')">User Master</a>
+        </div>
+        <a class="list-group-item list-group-item-action bg-light" (click)="onselect('chPwd')">Change Password</a>
+      </div>
+    </div>
+    <!-- /#sidebar-wrapper -->
+
+    <!-- Page Content -->
+    <div id="page-content-wrapper">
+
+      <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
+        <button class="btn btn-primary" id="menu-toggle" (click)="toggle()">Toggle Menu</button>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+          aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+
+
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav ml-auto mt-2 mt-lg-0">
+            <li class="nav-item active">
+              <a class="nav-link" (click)="onselect('home')">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#" onclick="">Logout</a>
+            </li>
+
+          </ul>
+        </div>
+      </nav>
+
+      <div class="container-fluid">
+        <app-alert></app-alert>
+        <app-commodity *ngIf="isComm"></app-commodity>
+        <app-organization *ngIf="isOrg"></app-organization>
+        <app-packs *ngIf="isPack"></app-packs>
+        <app-warehouse-commodity-map *ngIf="isWhComm"></app-warehouse-commodity-map>
+        <!--<app-commodity-packs *ngIf="isCommPacks"></app-commodity-packs>-->
+        <app-user *ngIf="isUser"></app-user>
+        <app-change-passwd *ngIf="isChngPwd"></app-change-passwd>
+      </div>
+    </div>
+    <!-- /#page-content-wrapper -->
+
+  </div>
+
+
+</body>
+
+</html>

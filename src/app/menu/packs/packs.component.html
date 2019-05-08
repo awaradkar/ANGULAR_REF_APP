@@ -1,0 +1,129 @@
+<div class="jumbotron">
+  <div class="container">
+    <div class="col-md-12 mx-auto">
+      <h2>Packs</h2>
+      
+      <div name="formDiv" *ngIf="!searchOpen">
+        <form name="form" (ngSubmit)="f.form.valid && save(f)" #f="ngForm" novalidate>
+            <input type="hidden" class="form-control" name="_id" [(ngModel)]="model._id">
+          <div class="form-group row">
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !_packType.valid }">
+              <label for="_packType">Pack Id</label>
+              <input type="text" class="form-control" name="_packType" placeholder="Pack Id"
+                [(ngModel)]="model._packType" #_packType="ngModel" required [disabled]="true" />
+              <div *ngIf="f.submitted && !_packType.valid && !disableFields" class="help-block">Pack Id is required
+              </div>
+            </div>
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !_packDescription.valid }">
+              <label for="_packDescription">Pack Description</label>
+              <input type="text" class="form-control" name="_commName" placeholder="Pack Description"
+                [(ngModel)]="model._packDescription" #_packDescription="ngModel" required [disabled]="disableFields" />
+              <div *ngIf="f.submitted && !_packDescription.valid && !disableFields" class="help-block">Pack Description is
+                required</div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-6" [ngClass]="{ 'has-error': f.submitted && !_packDeduction.valid }">
+              <label for="_packDeduction">Pack Deduction</label>
+              <input type="number" class="form-control" name="_packDeduction" placeholder="Pack Deduction"
+                [(ngModel)]="model._packDeduction" #_packDeduction="ngModel" required [disabled]="disableFields" />
+              <div *ngIf="f.submitted && !_packDeduction.valid && !disableFields" class="help-block">Pack Deduction is
+                required</div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-10"></div>
+            <div class="col-sm-1">
+              <button [disabled]="loading" class="btn btn-primary px-4 float-right" *ngIf="!disableFields && !editDisabled">Save</button>
+              <button [disabled]="loading" class="btn btn-primary px-4 float-right" *ngIf="!disableFields && editDisabled" (click)="edit(f)">Edit</button>
+              <button class="btn btn-primary px-4 float-right" *ngIf="disableFields" (click)="enableCreate(f)">Add New</button></div>
+            <div class="col-sm-1">
+              <button class="btn btn-primary px-4 float-right" (click)="viewPacks(f)">View</button>
+            </div>
+            <img *ngIf="loading"
+              src="data:image/gif;base64,R0lGODlhEAAQAPIAAP///wAAAMLCwkJCQgAAAGJiYoKCgpKSkiH/C05FVFNDQVBFMi4wAwEAAAAh/hpDcmVhdGVkIHdpdGggYWpheGxvYWQuaW5mbwAh+QQJCgAAACwAAAAAEAAQAAADMwi63P4wyklrE2MIOggZnAdOmGYJRbExwroUmcG2LmDEwnHQLVsYOd2mBzkYDAdKa+dIAAAh+QQJCgAAACwAAAAAEAAQAAADNAi63P5OjCEgG4QMu7DmikRxQlFUYDEZIGBMRVsaqHwctXXf7WEYB4Ag1xjihkMZsiUkKhIAIfkECQoAAAAsAAAAABAAEAAAAzYIujIjK8pByJDMlFYvBoVjHA70GU7xSUJhmKtwHPAKzLO9HMaoKwJZ7Rf8AYPDDzKpZBqfvwQAIfkECQoAAAAsAAAAABAAEAAAAzMIumIlK8oyhpHsnFZfhYumCYUhDAQxRIdhHBGqRoKw0R8DYlJd8z0fMDgsGo/IpHI5TAAAIfkECQoAAAAsAAAAABAAEAAAAzIIunInK0rnZBTwGPNMgQwmdsNgXGJUlIWEuR5oWUIpz8pAEAMe6TwfwyYsGo/IpFKSAAAh+QQJCgAAACwAAAAAEAAQAAADMwi6IMKQORfjdOe82p4wGccc4CEuQradylesojEMBgsUc2G7sDX3lQGBMLAJibufbSlKAAAh+QQJCgAAACwAAAAAEAAQAAADMgi63P7wCRHZnFVdmgHu2nFwlWCI3WGc3TSWhUFGxTAUkGCbtgENBMJAEJsxgMLWzpEAACH5BAkKAAAALAAAAAAQABAAAAMyCLrc/jDKSatlQtScKdceCAjDII7HcQ4EMTCpyrCuUBjCYRgHVtqlAiB1YhiCnlsRkAAAOwAAAAAAAAAAAA==" />
+
+          </div>
+        </form>
+      </div>
+    <!--search div starts here-->
+    <div name="searchDiv" *ngIf="searchOpen">
+      <form name="searchForm" (ngSubmit)="getRecordsOnInit(searhModel)" #f="ngForm">
+        <div class="form-group row">
+          <div class="col-sm-6">
+            <label for="_packType">Pack Id</label>
+           <input type="text" class="form-control" id="_packType" name="_packType" placeholder="Pack Id"
+              [(ngModel)]="searhModel._packType" #_packType="ngModel"/>
+
+              <p-autoComplete name="_commId" ngDefaultControl [(ngModel)]="searhModel._commId" [suggestions]="commAutoList" (completeMethod)="getCommId($event)" [minLength]="1" [immutable]="false">
+              </p-autoComplete>
+
+              
+          </div>
+          <div class="col-sm-6">
+            <label for="_packDescription">Pack Description</label>
+            <input type="text" class="form-control" id="_packDescription" name="_packDescription" placeholder="Pack Description"
+              [(ngModel)]="searhModel._packDescription" #_packDescription="ngModel" />
+          </div>
+        </div>
+        <!--
+          <div class="form-group row">
+            <div class="col-sm-6">
+              <label for="startDate">From Date</label>
+              <mat-form-field>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" name="startDate"
+                  [(ngModel)]="searhModel.startDate" #startDate="ngModel" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+            <div class="col-sm-6">
+              <label for="endDate">End Date</label>
+              <mat-form-field>
+                <input matInput [matDatepicker]="picker" placeholder="Choose a date" name="endDate"
+                  [(ngModel)]="searhModel.endDate" #endDate="ngModel" />
+                <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+              </mat-form-field>
+            </div>
+          </div>-->
+        <div class="form-group row">
+          <div class="col-sm-10"></div>
+          <div class="col-sm-1">
+            <button class="btn btn-primary px-4 float-right">Search</button></div>
+          <div class="col-sm-1">
+            <button class="btn btn-primary px-4 float-right" (click)="createNewForm(f)">Add</button>
+          </div>
+        </div>
+        <div style="box-align:center">
+          <label style="text-align: center">Pack View</label>
+          <div>
+            <input type="text" (input)="onQuickFilterChanged()" id="quickFilter" placeholder="quick filter..." />
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            Please select a record to edit or delete
+          </div>
+          <div style="height: 300px"> 
+          <ag-grid-angular  style="width: 100%; height: 100%;" class="ag-theme-balham" [paginationAutoPageSize]="true" [pagination]="true"
+            [rowData]="rowData" [columnDefs]="columnDefs" [defaultColDef]="defaultColDef"
+            [suppressRowClickSelection]="true"
+            [rowSelection]="rowSelection"  (gridReady)="onGridReady($event)">
+          </ag-grid-angular>
+          </div>
+        </div>
+        <div class="form-group row">
+          <div class="col-sm-8"></div>
+          <div class="col-sm-2">
+            <button class="btn btn-primary px-4 float-right" (click)="editRecord()">Edit Record</button></div>
+          <div class="col-sm-2">
+            <button class="btn btn-primary px-4 float-right" (click)="deleteRecord()">Delete Record</button>
+          </div>
+        </div>
+        
+      </form>
+
+    </div>
+  </div>
+</div>
+</div>
